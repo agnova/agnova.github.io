@@ -32,19 +32,19 @@
 
 </head>
 <body>
-    <div id="map" style="width: 960px; height: 500px"></div>
+    <div id="map" style="height: calc(100% - 44px); width: 100%; position: absolute !important;"></div>
     <script>
 
         var osmLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>',
             thunLink = '<a href="http://thunderforest.com/">Thunderforest</a>';
 
-        var osmUrl = 'http://tile.stamen.com/toner-background/{z}/{x}/{y}.png',
+        var stamenUrl = 'http://tile.stamen.com/toner-background/{z}/{x}/{y}.png',
             osmAttrib = 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
-            landUrl = 'http://tile.stamen.com/toner/{z}/{x}/{y}.png',
+            stamenTUrl = 'http://tile.stamen.com/toner/{z}/{x}/{y}.png',
             thunAttrib = 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.';
 
-        var TonerBackground = L.tileLayer(osmUrl, {attribution: osmAttrib}),
-            Toner = L.tileLayer(landUrl, {attribution: thunAttrib});
+        var TonerBackground = L.tileLayer(stamenUrl, {attribution: osmAttrib}),
+            Toner = L.tileLayer(stamenTUrl, {attribution: thunAttrib});
 
         var map = L.map('map', {
 			    layers: [TonerBackground] // only add one!
@@ -143,11 +143,25 @@ var Organisatie = L.geoJson(data, {
     }
 });
 
+	    var Zorghotel = L.geoJson(data, {
+    filter: function(feature, layer) {
+        return feature.properties.Type == "Zorghotel";
+    },
+    pointToLayer: function(feature, latlng) {
+        return L.marker(latlng, {
+            icon: pinkIcon
+          }).on('mouseover', function() {
+            this.bindPopup(feature.properties.Name + '<br/>' + feature.properties.Type).openPopup();
+  });
+    }
+});
+
 
 Verpleeghuisenverzorgingshuis.addTo(Verpleeghuizen)
 Particulierwoonzorgcentrum.addTo(Particulieren)
 Hospice.addTo(Hospicen)
 Organisatie.addTo(Organisatoren)
+	 Zorghotel.addTo(Zorghotels)
 
 
 
@@ -196,13 +210,15 @@ map.addLayer(sportClusters);
     var Verpleeghuizen = L.layerGroup();
     var Hospicen  = L.layerGroup();
     var Organisatoren  = L.layerGroup();
+	var Zorghotels  = L.layerGroup();
 
 
   var overlays = {
-       "Verpleeghuis": Verpleeghuizen,
-       "Hosp": Hospicen,
-       "Organi": Organisatoren,
-       "Particu": Particulieren,
+       "Verpleeghuizen": Verpleeghuizen,
+       "Hospice": Hospicen,
+       "Organisatie": Organisatoren,
+       "Particulieren": Particulieren,
+       "Zorghotel": Zorghotels,
 
     };
 
