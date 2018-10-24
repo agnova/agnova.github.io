@@ -38,13 +38,13 @@
         var osmLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>',
             thunLink = '<a href="http://thunderforest.com/">Thunderforest</a>';
 
-        var osmUrl = 'http://tile.stamen.com/toner-background/{z}/{x}/{y}.png',
+        var stamenUrl = 'http://tile.stamen.com/toner-background/{z}/{x}/{y}.png',
             osmAttrib = 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
-            landUrl = 'http://tile.stamen.com/toner/{z}/{x}/{y}.png',
+            stamenTUrl = 'http://tile.stamen.com/toner/{z}/{x}/{y}.png',
             thunAttrib = 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.';
 
-        var TonerBackground = L.tileLayer(osmUrl, {attribution: osmAttrib}),
-            Toner = L.tileLayer(landUrl, {attribution: thunAttrib});
+        var TonerBackground = L.tileLayer(stamenUrl, {attribution: osmAttrib}),
+            Toner = L.tileLayer(stamenTUrl, {attribution: thunAttrib});
 
         var map = L.map('map', {
 			    layers: [TonerBackground] // only add one!
