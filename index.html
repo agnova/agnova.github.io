@@ -143,11 +143,25 @@ var Organisatie = L.geoJson(data, {
     }
 });
 
+	    var Zorghotel = L.geoJson(data, {
+    filter: function(feature, layer) {
+        return feature.properties.Type == "Zorghotel";
+    },
+    pointToLayer: function(feature, latlng) {
+        return L.marker(latlng, {
+            icon: pinkIcon
+          }).on('mouseover', function() {
+            this.bindPopup(feature.properties.Name + '<br/>' + feature.properties.Type).openPopup();
+  });
+    }
+});
+
 
 Verpleeghuisenverzorgingshuis.addTo(Verpleeghuizen)
 Particulierwoonzorgcentrum.addTo(Particulieren)
 Hospice.addTo(Hospicen)
 Organisatie.addTo(Organisatoren)
+	 Zorghotel.addTo(Zorghotels)
 
 
 
@@ -196,13 +210,15 @@ map.addLayer(sportClusters);
     var Verpleeghuizen = L.layerGroup();
     var Hospicen  = L.layerGroup();
     var Organisatoren  = L.layerGroup();
+	var Zorghotels  = L.layerGroup();
 
 
   var overlays = {
-       "Verpleeghuis": Verpleeghuizen,
-       "Hosp": Hospicen,
-       "Organi": Organisatoren,
-       "Particu": Particulieren,
+       "Verpleeghuizen": Verpleeghuizen,
+       "Hospice": Hospicen,
+       "Organisatie": Organisatoren,
+       "Particulieren": Particulieren,
+       "Zorghotel": Zorghotels,
 
     };
 
