@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>agNOVA zorgkaart</title>
+    <title>agNOVA</title>
+	<link rel="icon"
+    	  type="image/png"
+     	 href="favicon.png">
     <meta charset="utf-8" />
     <link
         rel="stylesheet"
@@ -21,9 +24,70 @@
 .leaflet-popup-content-wrapper {
     background: #ffffff;
     color: #000000;
-    text-align:center;
-    font-weight: bold;
+    //text-align:Center;
+     img-align: center;
+
     font-family: "Verdana", Geneva, sans-serif;
+
+    h1 {
+      display: block;
+      font-size: 0,5em;
+      margin-top: 0.67em;
+      margin-bottom: 0.67em;
+      margin-left: 0;
+      margin-right: 0;
+      font-weight: Light;
+    }
+
+    h2 {
+      display: block;
+      font-size: 0,3em;
+      margin-top: 0.83em;
+      margin-bottom: 0.83em;
+      margin-left: 0;
+      margin-right: 0;
+      font-weight: light;
+    }
+
+    h3 {
+  display: block;
+  font-size: 1.17em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: light;
+}
+
+h4 {
+  display: block;
+  font-size: 1em;
+  margin-top: 1.33em;
+  margin-bottom: 1.33em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+}
+
+h5 {
+  display: block;
+  font-size: .83em;
+  margin-top: 1.67em;
+  margin-bottom: 1.67em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+}
+
+h6 {
+  display: block;
+  font-size: .67em;
+  margin-top: 2.33em;
+  margin-bottom: 2.33em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+}
 
 }
 
@@ -32,24 +96,26 @@
 
 </head>
 <body>
-    <div id="map" style="height: calc(100% - 44px); width: 100%; position: absolute !important;"></div>
+    <div id="map" style="height: calc(100% - 44px); width: 100%; background-color: white; position: absolute !important;"></div>
     <script>
 
         var osmLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>',
             thunLink = '<a href="http://thunderforest.com/">Thunderforest</a>';
 
-        var stamenUrl = 'http://tile.stamen.com/toner-background/{z}/{x}/{y}.png',
-            osmAttrib = 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
-            stamenTUrl = 'http://tile.stamen.com/toner/{z}/{x}/{y}.png',
-            thunAttrib = 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.';
+        var osmUrl = 'http://tile.stamen.com/toner-background/{z}/{x}/{y}.png',
+            osmAttrib = 'Map tiles by <a href="https://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
+            landUrl = 'http://tile.stamen.com/toner/{z}/{x}/{y}.png',
+            thunAttrib = 'Map tiles by <a href="https://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.';
 
-        var TonerBackground = L.tileLayer(stamenUrl, {attribution: osmAttrib}),
-            Toner = L.tileLayer(stamenTUrl, {attribution: thunAttrib});
+        var TonerBackground = L.tileLayer(osmUrl,{opacity: 0.6, attribution: osmAttrib}),
+            Toner = L.tileLayer(landUrl,{opacity: 0.6, attribution: thunAttrib});
 
         var map = L.map('map', {
-			    layers: [TonerBackground] // only add one!
+			    layers: [TonerBackground]// only add one!
 		    })
-		    .setView([52.370216, 4.895168], 7);
+		    .setView([52.370216, 4.895168], 7)
+			scrollWheelZoom: false
+	;
 
 		var baseLayers = {
 			"Kaart zonder namen": TonerBackground,
@@ -86,8 +152,21 @@
                               popupAnchor: [0,-15]
                                 });
 
+        var blackIcon = L.icon({
+                                                iconUrl: 'AG6.svg',
+                                                      iconSize: [15, 36], // size of the icon
+                                                      popupAnchor: [0,-15]
+                                                        });
 
-    var promise =  $.getJSON("Zorgkaarttotaal.geojson");
+                                                        var brownIcon = L.icon({
+                                                                              iconUrl: 'AG7.svg',
+                                                                                  iconSize: [15, 36], // size of the icon
+                                                                                  popupAnchor: [0,-15]
+                                                                                    });
+
+
+
+    var promise =  $.getJSON("ZorgkaartJuni.geojson");
     promise.then(function(data) {
 
 var ZorgNederland = L.geoJson(data);
@@ -100,7 +179,7 @@ var Particulierwoonzorgcentrum = L.geoJson(data, {
               return L.marker(latlng, {
               icon: yellowIcon
           }).on('mouseover', function() {//this is new
-            this.bindPopup(feature.properties.Name + '<br/>' + feature.properties.Type).openPopup();
+            this.bindPopup('<h3>'+ feature.properties.Naam + "</h2>" + "<b> Jaar:  </b>" +feature.properties.Jaar + "<br>" + "<b> Plaats:  </b>" + feature.properties.Plaats + "<br>" + "<b> Opdrachtgever:  </b>" + feature.properties.Client +  "<br>" + "<b> Type:  </b>" + feature.properties.Group + '<br><br><a href="' + feature.properties.URL + '" ">' + '<div align="center"><img src="' + feature.properties.Image + '" style="width:150px; height:auto;"><br><br></div>').openPopup();
 
         });
     }
@@ -113,7 +192,8 @@ var Verpleeghuisenverzorgingshuis = L.geoJson(data, {
         return L.marker(latlng, {
             icon: pinkIcon
           }).on('mouseover', function() {
-            this.bindPopup(feature.properties.Name + '<br/>' + feature.properties.Type).openPopup();
+            this.bindPopup('<h3>'+ feature.properties.Naam + "</h2>" + "<b> Type:  </b>" +feature.properties.Type + "<br>" + "<b> Plaats:  </b>" + feature.properties.Plaats + "<br>" + "<b> Adres:  </b>" + feature.properties.Adres).openPopup();
+
   });
     }
 });
@@ -125,7 +205,8 @@ var Hospice = L.geoJson(data, {
         return L.marker(latlng, {
             icon: greenIcon
           }).on('mouseover', function() {
-            this.bindPopup(feature.properties.Name + '<br/>' + feature.properties.Type).openPopup();
+            this.bindPopup('<h3>'+ feature.properties.Naam + "</h2>" + "<b> Type:  </b>" +feature.properties.Type + "<br>" + "<b> Plaats:  </b>" + feature.properties.Plaats + "<br>" + "<b> Adres:  </b>" + feature.properties.Adres).openPopup();
+
   });
     }
 });
@@ -138,30 +219,72 @@ var Organisatie = L.geoJson(data, {
         return L.marker(latlng, {
             icon: blueIcon
           }).on('mouseover', function() {
-            this.bindPopup(feature.properties.Name + '<br/>' + feature.properties.Type).openPopup();
+            this.bindPopup('<h3>'+ feature.properties.Naam + "</h2>" + "<b> Type:  </b>" +feature.properties.Type + "<br>" + "<b> Plaats:  </b>" + feature.properties.Plaats + "<br>" + "<b> Adres:  </b>" + feature.properties.Adres).openPopup();
+
   });
     }
 });
 
-	    var Zorghotel = L.geoJson(data, {
+var kantoor = L.geoJson(data, {
+    filter: function(feature, layer) {
+        return feature.properties.Type == "Kantoor";
+    },
+    pointToLayer: function(feature, latlng) {
+        return L.marker(latlng, {
+            icon: redIcon
+          }).on('mouseover', function() {
+            this.bindPopup('<h3>'+ feature.properties.Naam + "</h2>" + "<b> Type:  </b>" +feature.properties.Type + "<br>" + "<b> Plaats:  </b>" + feature.properties.Plaats + "<br>" + "<b> Adres:  </b>" + feature.properties.Adres).openPopup();
+
+  });
+    }
+});
+
+var lichamelijk = L.geoJson(data, {
+    filter: function(feature, layer) {
+        return feature.properties.Type == "Woonvoorziening voor lichamelijk gehandicapten";
+    },
+    pointToLayer: function(feature, latlng) {
+        return L.marker(latlng, {
+            icon: brownIcon
+          }).on('mouseover', function() {
+            this.bindPopup('<h3>'+ feature.properties.Naam + "</h2>" + "<b> Type:  </b>" +feature.properties.Type + "<br>" + "<b> Plaats:  </b>" + feature.properties.Plaats + "<br>" + "<b> Adres:  </b>" + feature.properties.Adres).openPopup();
+
+  });
+    }
+});
+
+var zorghotel = L.geoJson(data, {
     filter: function(feature, layer) {
         return feature.properties.Type == "Zorghotel";
     },
     pointToLayer: function(feature, latlng) {
         return L.marker(latlng, {
-            icon: pinkIcon
+            icon: blackIcon
           }).on('mouseover', function() {
-            this.bindPopup(feature.properties.Name + '<br/>' + feature.properties.Type).openPopup();
+            this.bindPopup('<h3>'+ feature.properties.Naam + "</h2>" + "<b> Type:  </b>" +feature.properties.Type + "<br>" + "<b> Plaats:  </b>" + feature.properties.Plaats + "<br>" + "<b> Adres:  </b>" + feature.properties.Adres).openPopup();
+
   });
     }
 });
 
+var recentepr = L.geoJson(data, {
+    filter: function(feature, layer) {
+        return feature.properties.Jaar > "2014";
+    },
+    pointToLayer: function(feature, latlng) {
+        return L.marker(latlng, {
+            icon: blackIcon
+          }).on('mouseover', function() {
+            this.bindPopup('<h3>'+ feature.properties.Naam + "</h2>" + "<b> Type:  </b>" +feature.properties.Type + "<br>" + "<b> Plaats:  </b>" + feature.properties.Plaats + "<br>" + "<b> Adres:  </b>" + feature.properties.Adres).openPopup();
 
-Verpleeghuisenverzorgingshuis.addTo(Verpleeghuizen)
-Particulierwoonzorgcentrum.addTo(Particulieren)
-Hospice.addTo(Hospicen)
-Organisatie.addTo(Organisatoren)
-	 Zorghotel.addTo(Zorghotels)
+  });
+    }
+});
+
+//woningbouw.addTo(woningbouwprojecten)
+//zorg.addTo(zorgprojecten)
+//sport.addTo(sportprojecten)
+//school.addTo(schoolprojecten)
 
 
 
@@ -187,43 +310,91 @@ var clusterStyles = [
   }
 ];
 
-var zorgClusters = L.markerClusterGroup({ disableClusteringAtZoom: 12, removeOutsideVisibleBounds: true, maxClusterRadius: 120, animateAddingMarkers: false, });
-zorgClusters.addLayer(Verpleeghuisenverzorgingshuis);
-map.addLayer(zorgClusters);
+var verpleegClusters = L.markerClusterGroup({ disableClusteringAtZoom: 12, removeOutsideVisibleBounds: true, maxClusterRadius: 120, animateAddingMarkers: false, });
+verpleegClusters.addLayer(Verpleeghuisenverzorgingshuis);
+//map.addLayer(zorgClusters);
 
-var woningbouwClusters = L.markerClusterGroup({ disableClusteringAtZoom: 12, removeOutsideVisibleBounds: true, maxClusterRadius: 120, animateAddingMarkers: false, });
-woningbouwClusters.addLayer(Particulierwoonzorgcentrum);
-map.addLayer(woningbouwClusters);
+var particulierClusters = L.markerClusterGroup({ disableClusteringAtZoom: 12, removeOutsideVisibleBounds: true, maxClusterRadius: 120, animateAddingMarkers: false, });
+particulierClusters.addLayer(Particulierwoonzorgcentrum);
+//map.addLayer(woningbouwClusters);
 
-var schoolClusters = L.markerClusterGroup({ disableClusteringAtZoom: 12, removeOutsideVisibleBounds: true, maxClusterRadius: 120, animateAddingMarkers: false, });
-woningbouwClusters.addLayer(Hospice);
-map.addLayer(schoolClusters);
+var hospiceClusters = L.markerClusterGroup({ disableClusteringAtZoom: 12, removeOutsideVisibleBounds: true, maxClusterRadius: 120, animateAddingMarkers: false, });
+hospiceClusters.addLayer(Hospice);
+//map.addLayer(schoolClusters);
 
-var sportClusters = L.markerClusterGroup({ disableClusteringAtZoom: 12, removeOutsideVisibleBounds: true, maxClusterRadius: 120, animateAddingMarkers: false, });
-woningbouwClusters.addLayer(Organisatie);
-map.addLayer(sportClusters);
+var organisatieClusters = L.markerClusterGroup({ disableClusteringAtZoom: 12, removeOutsideVisibleBounds: true, maxClusterRadius: 120, animateAddingMarkers: false, });
+organisatieClusters.addLayer(Organisatie);
+//map.addLayer(sportClusters);
+
+var lichamelijkClusters = L.markerClusterGroup({ disableClusteringAtZoom: 12, removeOutsideVisibleBounds: true, maxClusterRadius: 120, animateAddingMarkers: false, });
+lichamelijkClusters.addLayer(lichamelijk);
+//map.addLayer(sportClusters);
+
+var zorghotelClusters = L.markerClusterGroup({ disableClusteringAtZoom: 12, removeOutsideVisibleBounds: true, maxClusterRadius: 120, animateAddingMarkers: false, });
+zorghotelClusters.addLayer(zorghotel);
+//map.addLayer(sportClusters);
 
 
+
+verpleegClusters.addTo(verpleegprojecten)
+particulierClusters.addTo(particulierprojecten)
+hospiceClusters.addTo(hospiceprojecten)
+organisatieClusters.addTo(organisatieprojecten)
+lichamelijkClusters.addTo(lichamelijkprojecten)
+zorghotelClusters.addTo(zorghotelprojecten)
 });
 
-    var Particulieren = L.layerGroup();
-    var Verpleeghuizen = L.layerGroup();
-    var Hospicen  = L.layerGroup();
-    var Organisatoren  = L.layerGroup();
-	var Zorghotels  = L.layerGroup();
+
+
+
+
+    var verpleegprojecten = L.layerGroup();
+    verpleegprojecten.addTo(map);
+    var particulierprojecten  = L.layerGroup();
+    particulierprojecten.addTo(map);
+    var hospiceprojecten  = L.layerGroup();
+    hospiceprojecten.addTo(map);
+    var organisatieprojecten  = L.layerGroup();
+    
+    var lichamelijkprojecten  = L.layerGroup();
+    lichamelijkprojecten.addTo(map);
+    var zorghotelprojecten  = L.layerGroup();
+    zorghotelprojecten.addTo(map);
+
 
 
   var overlays = {
-       "Verpleeghuizen": Verpleeghuizen,
-       "Hospice": Hospicen,
-       "Organisatie": Organisatoren,
-       "Particulieren": Particulieren,
-       "Zorghotel": Zorghotels,
+       "Verpleeghuizen en verzorgingshuizen": verpleegprojecten,
+       "Particuliere woonzorgcentrums": particulierprojecten,
+       "Hospice": hospiceprojecten,
+       "Organisaties": organisatieprojecten,
+       "Woonvoorziening voor lichamelijke gehandicapten": lichamelijkprojecten,
+       "Zorghotel": zorghotelprojecten
+
+              //var projecten = L.layerGroup();
+              //var woningbouwprojecten = L.layerGroup();
+              //var zorgprojecten  = L.layerGroup();
+              //var sportprojecten  = L.layerGroup();
+              //var schoolprojecten  = L.layerGroup();
+              //var andereprojecten  = L.layerGroup();
+
+
+
+            //var overlays = {
+               //  "Projecten": projecten,
+               //  "Woningbouw": woningbouwprojecten,
+               //  "Zorg": zorgprojecten,
+               //  "Scholen": schoolprojecten,
+               //  "Sport": sportprojecten,
+               //  "Anders": andereprojecten
+
 
     };
 
 
-		L.control.layers(baseLayers,overlays).addTo(map);
+		L.control.layers(baseLayers,overlays,{collapsed:false}).addTo(map);
+
+
 
     </script>
 </body>
